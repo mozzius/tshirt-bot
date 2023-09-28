@@ -39,7 +39,7 @@ async function main() {
     const { post } = event;
     console.log(`got mention from ${post.author.handle}: ${post.text}`);
     await bot.like(post);
-    console.log(post);
+
     const thread = await agent.getPostThread({
       uri: post.uri,
       depth: 0,
@@ -61,11 +61,9 @@ async function main() {
         image = threadPost.post.embed.media.images[0]!.fullsize;
       }
       threadPost = threadPost.parent;
-      console.log(image);
     }
 
     if (image) {
-      console.log("posting");
       const parent = {
         uri: thread.data.thread.post.uri,
         cid: thread.data.thread.post.cid,
@@ -73,7 +71,7 @@ async function main() {
       await agent.post({
         text: "you can buy the tshirt here!! do it now!!!!",
         langs: ["en"],
-        tags: ['🤖'],
+        tags: ["🤖"],
         embed: {
           $type: "app.bsky.embed.external",
           external: {
