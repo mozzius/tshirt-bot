@@ -84,9 +84,7 @@ async function main() {
         } satisfies AppBskyEmbedExternal.Main,
         reply: {
           parent,
-          root: AppBskyFeedPost.isRecord(thread.data.thread.post)
-            ? thread.data.thread.post.reply?.root ?? parent
-            : parent,
+          root: post.root ?? parent,
         } satisfies AppBskyFeedPost.ReplyRef,
       });
     }
