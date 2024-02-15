@@ -88,6 +88,8 @@ async function main() {
 
       const { blob } = (await res.json()) as { blob: BlobRef };
 
+      console.log(blob);
+
       await agent.post({
         text: "you can buy the tshirt here!! do it now!!!!",
         langs: ["en"],
