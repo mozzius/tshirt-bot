@@ -9,6 +9,7 @@ import {
   BskyAgent,
   ComAtprotoRepoStrongRef,
 } from "@atproto/api";
+import { createImage } from "./image";
 
 const agent = new BskyAgent({
   service: "https://bsky.social",
@@ -68,6 +69,9 @@ async function main() {
         uri: thread.data.thread.post.uri,
         cid: thread.data.thread.post.cid,
       } satisfies ComAtprotoRepoStrongRef.Main;
+      const {
+        data: { blob },
+      } = await agent.uploadBlob(await (await createImage(image)).toBuffer());
       await agent.post({
         text: "you can buy the tshirt here!! do it now!!!!",
         langs: ["en"],
@@ -75,6 +79,7 @@ async function main() {
         embed: {
           $type: "app.bsky.embed.external",
           external: {
+            thumbnail: blob,
             uri: `https://tshirt.mozzius.dev?design=${encodeURIComponent(
               image
             )}`,

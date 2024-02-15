@@ -6,19 +6,20 @@
   "scripts": {
     "start": "tsx ./src/index.ts",
     "dev": "tsx watch ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsx ./src/test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.11.17",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "@atproto/api": "^0.9.6",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.4",
     "easy-bsky-bot-sdk": "^0.1.2",
-    "tsx": "^4.7.0"
+    "sharp": "^0.33.2",
+    "tsx": "^4.7.1"
   }
 }
