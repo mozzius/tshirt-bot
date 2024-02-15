@@ -1,15 +1,17 @@
 import { BskyBot, Events } from "easy-bsky-bot-sdk";
-import "dotenv/config";
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  BlobRef,
   BskyAgent,
   ComAtprotoRepoStrongRef,
 } from "@atproto/api";
 import { createImage } from "./image";
+
+import "dotenv/config";
 
 const agent = new BskyAgent({
   service: "https://bsky.social",
@@ -22,7 +24,7 @@ async function main() {
   if (!password) throw new Error("BOT_PASSWORD not set in .env");
 
   BskyBot.setOwner({
-    handle: "mozzius.dev",
+    handle: "www.mozzius.dev",
     contact: "mozzius@protonmail.com",
   });
 
@@ -69,9 +71,23 @@ async function main() {
         uri: thread.data.thread.post.uri,
         cid: thread.data.thread.post.cid,
       } satisfies ComAtprotoRepoStrongRef.Main;
-      const {
-        data: { blob },
-      } = await agent.uploadBlob(await (await createImage(image)).toBuffer());
+
+      const thumb = await createImage(image);
+
+      const res = await fetch(
+        "https://bsky.social/xrpc/com.atproto.repo.uploadBlob",
+        {
+          method: "POST",
+          body: await thumb.toBuffer(),
+          headers: {
+            "Content-Type": "image/jpeg",
+            Authorization: `Bearer ${agent.session!.accessJwt}`,
+          },
+        }
+      );
+
+      const { blob } = (await res.json()) as { blob: BlobRef };
+
       await agent.post({
         text: "you can buy the tshirt here!! do it now!!!!",
         langs: ["en"],
