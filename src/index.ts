@@ -88,8 +88,6 @@ async function main() {
 
       const { blob } = (await res.json()) as { blob: BlobRef };
 
-      console.log(blob);
-
       await agent.post({
         text: "you can buy the tshirt here!! do it now!!!!",
         langs: ["en"],
@@ -97,7 +95,7 @@ async function main() {
         embed: {
           $type: "app.bsky.embed.external",
           external: {
-            thumbnail: blob,
+            thumb: blob,
             uri: `https://tshirt.mozzius.dev?design=${encodeURIComponent(
               image
             )}`,

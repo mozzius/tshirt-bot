@@ -1,4 +1,4 @@
-import { BlobRef, BskyAgent } from "@atproto/api";
+import { AppBskyEmbedExternal, BlobRef, BskyAgent } from "@atproto/api";
 import { createImage } from "./image";
 
 import "dotenv/config";
@@ -20,7 +20,7 @@ const main = async () => {
     "https://bsky.social/xrpc/com.atproto.repo.uploadBlob",
     {
       method: "POST",
-      body: image,
+      body: await merged.toBuffer(),
       headers: {
         "Content-Type": "image/jpeg",
         Authorization: `Bearer ${agent.session!.accessJwt}`,
@@ -28,9 +28,21 @@ const main = async () => {
     }
   );
 
-  const blobRef = (await uploadRes.json()) as { blob: BlobRef };
+  const { blob } = (await uploadRes.json()) as { blob: BlobRef };
 
-  console.log(blobRef.blob);
+  await agent.post({
+    langs: ["en"],
+    text: "test pls ignore",
+    embed: {
+      $type: "app.bsky.embed.external",
+      external: {
+        thumb: blob,
+        uri: `https://tshirt.mozzius.dev?design=${encodeURIComponent(image)}`,
+        title: "Buy the tshirt here!!!!",
+        description: "hand crafted just for u :)",
+      } satisfies AppBskyEmbedExternal.External,
+    },
+  });
 };
 
 main();
